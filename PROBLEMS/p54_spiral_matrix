@@ -1,0 +1,73 @@
+54. Spiral Matrix
+Medium
+
+793
+
+321
+
+Favorite
+
+Share
+Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
+
+Example 1:
+
+Input:
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+Output: [1,2,3,6,9,8,7,4,5]
+Example 2:
+
+Input:
+[
+  [1, 2, 3, 4],
+  [5, 6, 7, 8],
+  [9,10,11,12]
+]
+Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.empty() || matrix.front().empty()) {
+            return vector<int>();
+        }
+
+        int top = 0, bottom = matrix.size() -1;
+        int left = 0, right = matrix.front().size()-1;
+        vector<int> result;
+        while ((top < bottom) && (left < right)) {
+            for (int i=left; i<=right; ++i) {
+                result.push_back(matrix[top][i]);
+            }
+            for (int r=top+1; r<= bottom; ++r) {
+                result.push_back(matrix[r][right]);
+            }
+            for (int c=right-1; c>=left; --c) {
+                result.push_back(matrix[bottom][c]);
+            }
+            for (int r=bottom-1; r>=top+1; --r) {
+                result.push_back(matrix[r][left]);
+            }
+            top++; bottom--;
+            left++; right--;
+        }
+        if (top < bottom && (left == right)) {
+            for (int r = top; r <= bottom; ++r) {
+                result.push_back(matrix[r][left]);
+            }
+        } else if (left < right &&  (top == bottom)) {
+            for (size_t c = left; c <= right; ++c) {
+                result.push_back(matrix[top][c]);
+            }
+        } else if (left == right && (top == bottom)){
+            result.push_back(matrix[top][left]);
+        }
+
+        return result;
+    }
+};

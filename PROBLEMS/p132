@@ -1,0 +1,63 @@
+132. Palindrome Partitioning II
+Hard
+
+459
+
+20
+
+Favorite
+
+Share
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+Example:
+
+Input: "aab"
+Output: 1
+Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+
+// THere is a expand from middle apprach, 1) expand from center 2) expand from two same in the center
+
+
+class Solution {
+public:
+    int minCut(string s) {
+        int n=s.size();
+
+        vector<int> mincut(n+1,0);
+        for(int i=0;i<n+1;i++){
+            mincut[i]=i-1;
+        }
+        /***这是错误的，因为这样只要奇数成回环或者偶数呈回环，j都会+1，那么存在前一次是奇数回环使得j+1，而后错误判断成偶数回环。   偶数回环或奇数回环成立条件应该是递归的，只有内部是奇数回环或偶数回环的时候，两边两个元素相等，那么扩展的才是奇数回环或偶数回环。如果内部是奇数回环，而两侧元素相等，无法得出此回环是偶数回环。下面把两个判断放一个for循环里就产生了这种错误。
+        for(int i=0;i<n;i++){//循环字符串每个字母
+            for(int j=0;i-j+1>=0&&i+j<n;j++){//从该字母往两边扩展
+                int count=0;
+                if(i-j>=0&&s[i-j]==s[i+j]){//如果两边字母相等  ,且回环字符串是奇数个
+                    mincut[i+j+1]=min(mincut[i+j+1],mincut[i-j]+1);
+                    count++;
+                }
+                if(j>=1&&s[i-j+1]==s[i+j]){//回环是偶数个
+                    mincut[i+j+1]=min(mincut[i+j+1],mincut[i-j+1]+1);
+                    count++;
+                }
+                if(count==0){//否则跳出比对，换下一个字母
+                    break;
+                }
+            }
+        }
+        **/
+        for(int i=0;i<n;i++){
+            for(int j=0;i-j>=0&&i+j<n&&s[i-j]==s[i+j];j++){//奇数回环
+                mincut[i+j+1]=min(mincut[i+j+1],mincut[i-j]+1);
+            }
+            for(int j=1;i-j+1>=0&&i+j<n&&s[i-j+1]==s[i+j];j++){//偶数回环，两者分开循环
+                mincut[i+j+1]=min(mincut[i+j+1],mincut[i-j+1]+1);
+            }
+        }
+        return mincut[n];
+
+    }
+};

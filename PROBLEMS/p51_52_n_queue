@@ -1,0 +1,90 @@
+51. N-Queens
+Hard
+
+666
+
+29
+
+Favorite
+
+Share
+The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+
+
+
+Given an integer n, return all distinct solutions to the n-queens puzzle.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+
+Example:
+
+Input: 4
+Output: [
+ [".Q..",  // Solution 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // Solution 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above.
+
+
+
+class Solution {
+public:
+    int totalNQueens(int n) {
+        if (n == 1) return 1;
+        vector<int> slt{0};
+        int solutions = 0;
+        int start = 0;
+
+        while (true) {
+            auto c = findValidCol(slt, start, n);
+
+            while (c < 0 && !slt.empty()) {
+                int last = slt.back();
+                slt.pop_back();
+                c = findValidCol(slt, last+1, n);
+            }
+
+            if (c < 0) return solutions;
+            slt.push_back(c);
+
+            if (slt.size() == n) {
+                ++solutions;
+                start = slt.back()+1;
+                slt.pop_back();
+            } else {
+                start = 0;
+            }
+        }
+    }
+
+    void print(vector<int>& v) {
+        for (auto& n: v) {
+            cout << n << " ";
+        }
+        cout << endl;
+    }
+
+    int findValidCol(const vector<int>& slt, int s, int n) {
+        int r = slt.size();
+        for (int i=s; i<n; ++i) {
+            int j=0;
+            for (; j<slt.size(); ++j) {
+                if (i == slt[j]) break;
+                if (abs(r-j) == abs(slt[j] - i)) break;
+            }
+
+            if (j == slt.size()) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+};

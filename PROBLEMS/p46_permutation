@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+        if (nums.empty()) return result;
+        
+        for (auto& n: nums) {
+            auto temp = move(result);
+            if (temp.empty()) {
+                result.push_back(vector<int>{n});
+            } else {
+                for_each(temp.begin(), temp.end(), [&result, &n](const auto& v) {
+                   for (size_t i=0; i<=v.size(); ++i) {
+                       vector<int> one_result;
+                       copy(v.begin(), v.begin()+i, back_inserter(one_result));
+                       one_result.push_back(n);
+                       copy(v.begin()+i, v.end(), back_inserter(one_result));
+                       result.push_back(one_result);
+                   } 
+                });
+            }
+        }
+        
+        return result;
+    }
+};

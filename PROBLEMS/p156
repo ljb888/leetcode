@@ -1,0 +1,79 @@
+Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty, flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.
+
+For example:
+
+Given a binary tree {1,2,3,4,5},
+
+    1
+
+   / \
+
+  2   3
+
+ / \
+
+4   5
+
+return the root of the binary tree [4,5,2,#,#,3,1].
+
+   4
+
+  / \
+
+ 5   2
+
+    / \
+
+   3   1  
+
+ 
+
+// for each left node with sibling, turn its sibling to its left child, its parent to its right child, one way to save its parents and right sibling
+unordered_map<Node*, pair<Node*, Node*>> slibing_parents;
+auto newroot = nullptr;
+for (auto left = root; left->left; left=left->left) {
+    sibling_parents[left->left] = make_pair(left->right, left);
+    newroot = left->left;
+}
+sibling_parents[root] = make_pair(nullptr, nullptr);
+
+for (auto& r: sibling_parents) {
+    r.first->left = r.second.first;
+    r.first->right = r.second.second;
+}
+
+return newroot;
+
+
+
+// another way, 
+struct Node {
+    int val;
+    Node* left, *right;
+};
+
+Node* upSideDownTree(Node* root) {
+    if (!root || (!root->left)) return root;
+
+    auto sibling = root->right;
+    auto parent = root;
+    Node* result = root->left;
+
+    while (result) {
+        auto nSibling = result->right;
+	auto nResult = result->left;
+	result->left = sibling;
+	result->right = parent;
+	parent = result;
+	sibling = nSibling;
+	if (! nResult) break;
+	result = nResult;
+   }
+
+   return result;
+}
+
+
+
+
+

@@ -1,0 +1,65 @@
+45. Jump Game II
+Hard
+
+823
+
+40
+
+Favorite
+
+Share
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Your goal is to reach the last index in the minimum number of jumps.
+
+Example:
+
+Input: [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2.
+    Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Note:
+
+You can assume that you can always reach the last index.
+
+My answert:
+
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        if (nums.size() < 2) return 0;
+        vector<pair<int, size_t>> step_stones;
+        int steps = 0;
+        size_t i = 0;
+
+        for (; i<nums.size(); ++i) {
+            nums[i] += i;
+
+            if (nums[i] + 1 >= nums.size()) {
+                ++steps;
+                break;
+            }
+
+            if (step_stones.empty() || (nums[i] > step_stones.back().first)) {
+                step_stones.push_back(make_pair(nums[i], i));
+            }
+        }
+
+        auto end = step_stones.end();
+
+        while (i > 0) {
+            auto fI = lower_bound(step_stones.begin(), end, i,
+                                  [](const auto& v, const auto& cv) {
+                                      return v.first < cv;
+                                  });
+            ++steps;
+            end = fI;
+            i = fI->second;
+        }
+
+        return steps;
+    }
+
+};
